@@ -1,0 +1,234 @@
+<!--Añado el btn de añadir habilidad y que abra el modal -->
+<div
+  class="d-grid px-5 gap-2 d-md-flex justify-content-md-end"
+  *ngIf="hasAccess"
+>
+  <button
+    type="button"
+    class="btn btn-primary btn-sm"
+    data-bs-toggle="modal"
+    data-bs-target="#addProyectoModal"
+    (click)="abrirModal('add')"
+  >
+    Registrar Proyecto
+  </button>
+</div>
+
+
+<div class="row" id="rowProyecto">
+
+  <div id="proy" class="container  mb-5 mt-5" >
+    <div class="conteiner-fluid " > 
+      <h3>Proyectos</h3>
+        <div class="accordion m-3 mb-4" id="accordionPanelsStayOpenExample">
+            <div *ngFor="let proyecto of proyectosList" class="accordion-item ">
+              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                  <strong>{{proyecto.name}}</strong>
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                  <p><strong>Proyecto: {{proyecto.name}}</strong></p>
+                  <p><strong>Descripción: </strong>{{proyecto.detail}} </p>
+               </div>
+               <div class="col text-end" *ngIf="hasAccess">
+                <a type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#addProyectoModal"
+                  (click)="abrirModal('edit',proyecto)">
+                  Editar
+                </a>
+                <a type="button" class="btn btn-secondary btn-sm " data-bs-toggle="modal"
+                  data-bs-target="#deleteProyectoModal" (click)="abrirModal('delete',proyecto)">
+                  Eliminar
+                </a>
+              </div>
+                
+            </div>
+          </div><br/>
+        </div>
+  </div>
+
+
+
+  <!-- Modal -->
+
+  <div
+    class="modal fade"
+    id="addProyectoModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+    role="document"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModalProyecto"></h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form
+            [formGroup]="form"
+            class="row g-3"
+            (ngSubmit)="guardarProyecto($event)"
+            novalidate
+          >
+            <div class="input-group form-group">
+              <input
+                type="hidden"
+                formControlName="proyectid"
+                name="proyectid"
+                id="proyectid"
+                class="form-control"
+              />
+              <label for="nombre" class="input-group-text textoLabel"
+                >Nombre
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                placeholder="Nombre del proyecto"
+                formControlName="name"
+                id="name"
+                [ngClass]="{
+                  'is-invalid': Nombre?.errors && Nombre?.touched,
+                  'is-valid': !Nombre?.errors && Nombre?.touched
+                }"
+                required
+              />
+
+              <div
+                *ngIf="Nombre?.hasError('required')"
+                class="invalid-feedback"
+              >
+                El nombre del proyecto es requerido
+              </div>
+            </div>
+
+            <div class="col-md-4 input-group form-group">
+              <label for="detail" class="input-group-text textoLabel"
+                >Detalle</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="detail"
+                name="detail"
+                id="detail"
+                placeholder="Detalle proyecto"
+              />
+            </div>
+
+            <div class="col-md-4 input-group form-group">
+              <label for="urlImage" class="input-group-text textoLabel"
+                >Url Imagen</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="urlImage"
+                name="urlImage"
+                id="urlImage"
+                placeholder="Url Imagen proyecto"
+              />
+            </div>
+
+            <div class="col-md-4 input-group form-group">
+              <label for="urlProyect" class="input-group-text textoLabel"
+                >Url Proyecto</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="urlProyect"
+                name="urlProyect"
+                id="urlProyect"
+                placeholder="Url Proyecto"
+              />
+            </div>
+
+            <div class="row" style="padding-top: 15%">
+              <label>Vista Previa</label>
+
+              <p class="h5">{{ form.value["name"] }}</p>
+              <p class="h7">{{ form.value["detail"] }} </p>
+              <p >{{ form.value["urlImage"] }} </p>
+              <p >{{ form.value["urlProyect"] }} </p>
+            </div>
+
+            <div class="modal-footer form-group">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+                [disabled]="form.invalid"
+              >
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de borrar-->
+  <div class="modal" id="deleteProyectoModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmación</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            ¿Está seguro de eliminar el proyecto "{{
+              borrarProyecto?.name
+            }}"?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="onDeleteProyecto(borrarProyecto!.proyectid)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,275 @@
+<div class="d-grid px-5 gap-2 d-md-flex justify-content-md-end" *ngIf="hasAccess">
+    <button type="button" class="btn btn-primary btn-sm m-3" data-bs-toggle="modal" data-bs-target="#addBannerModal"
+        (click)="abrirModalPersona('add')">
+        Registrar Persona
+    </button>
+
+    <button type="button" class="btn btn-primary btn-sm m-3" data-bs-toggle="modal" data-bs-target="#addImagenModal"
+        (click)="abrirModalImagen('add')">
+        Registrar Imagen
+    </button>
+</div>
+
+<div class="row" id="row">
+    <div id="banner" class="container mb-5 mt-5">
+        <div class="container-fluid mb-5 mt-5 ">
+            <div class="row" id="box-search">
+                <div class="thumbnail text-center">
+                    <img [src]="imagen[0].backImage" id="imagen">
+                    <div class="caption" id="caption2">
+                        <div class="card" style=" width: 13rem;background-color: rgb(205, 238, 16);">
+                            <div class="card-body">
+                                <p class="card-text ">{{personas[0].degree}}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="caption" id="caption1">
+                        <div class="card" style=" width: 13rem;background-color: rgb(241, 237, 13);">
+                            <img [src]="imagen[0].profile" class="img-rounded img-fluid" alt="...">
+                            <div class="card-body">
+                                <h2>{{personas[0].name}} {{personas[0].surname}}</h2>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col text-end" *ngIf="hasAccess">
+            <a type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal" data-bs-target="#addBannerModal"
+                (click)="abrirModalPersona('edit', personas[0])">
+                Editar Persona
+            </a>
+            <a type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal"
+                data-bs-target="#deleteBannerModal" (click)="abrirModalPersona('delete', personas[0])">
+                Borrar Persona</a>
+        </div>
+        <div class="col text-end" *ngIf="hasAccess">
+            <a type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal" data-bs-target="#addImagenModal"
+                (click)="abrirModalImagen('edit', imagen[0])">
+                Editar Imagen
+            </a>
+            <a type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal"
+                data-bs-target="#deleteImagenModal" (click)="abrirModalImagen('delete', imagen[0])">
+                Borrar Imagen</a>
+        </div>
+
+    </div>
+
+  
+
+<div class="modal fade" id="addBannerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true" role="document">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloModalBanner"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formPersona" class="row g-3" (ngSubmit)="guardarPersona($event)" novalidate>
+                    <div class="input-group form-group">
+                        <input type="hidden" formControlName="personId" name="personId" id="personId"
+                            class="form-control" />
+                        <label for="name" class="input-group-text textoLabel">Nombre
+                        </label>
+                        <input type="text" class="form-control" name="name" placeholder="Nombre de la persona"
+                            formControlName="name" id="name" [ngClass]="{
+                  'is-invalid': Nombre?.errors && Nombre?.touched,
+                  'is-valid': !Nombre?.errors && Nombre?.touched
+                }" required />
+                        <div *ngIf="Nombre?.hasError('required')" class="invalid-feedback">
+                            El nombre de la persona es requerido
+                        </div>
+                    </div>
+
+                    <div class="input-group form-group">
+                        <input type="hidden" formControlName="personId" name="personId" id="personId"
+                            class="form-control" />
+                        <label for="surname" class="input-group-text textoLabel">Apellido
+                        </label>
+                        <input type="text" class="form-control" name="surname" placeholder="Apellido de la persona"
+                            formControlName="surname" id="surname" [ngClass]="{
+                  'is-invalid': Apellido?.errors && Nombre?.touched,
+                  'is-valid': !Apellido?.errors && Nombre?.touched
+                }" required />
+
+                        <div *ngIf="Apellido?.hasError('required')" class="invalid-feedback">
+                            El nombre de la persona es requerido
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4 input-group form-group">
+                        <label for="acerca-de" class="input-group-text textoLabel">Titulo</label>
+                        <input type="text" class="form-control" formControlName="degree" name="degree" id="degree"
+                            placeholder="Titulo" />
+                    </div>
+
+
+                    <div class="row" style="padding-top: 15%">
+                        <label>Vista Previa</label>
+
+                        <p class="h5">{{ formPersona.value["name"] }}</p>
+                        <p class="h7">{{ formPersona.value["surname"] }}</p>
+                        <p>{{ formPersona.value["degree"] }}</p>
+
+                    </div>
+
+                    <div class="modal-footer form-group">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+                            [disabled]="formPersona.invalid">
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addImagenModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true" role="document">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloImagenBanner"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="formImagen" class="row g-3" (ngSubmit)="guardarImagen($event)" novalidate>
+                    <div class="input-group form-group">
+                        <input type="hidden" formControlName="id" name="id" id="id"
+                            class="form-control" />
+                        <label for="profile" class="input-group-text textoLabel">Foto Perfil
+                        </label>
+                        <input type="text" class="form-control" name="profile" placeholder="Foto Perfil de la persona"
+                            formControlName="profile" id="profile" />
+                       
+                    </div>
+
+                    <div class="input-group form-group">
+                       
+                        <label for="backImage" class="input-group-text textoLabel">Foto fondo
+                        </label>
+                        <input type="text" class="form-control" name="backImage" placeholder="Foto banner"
+                            formControlName="backImage" id="backImage"  />
+
+                    </div>
+
+                    <div class="row" style="padding-top: 15%">
+                        <label>Vista Previa</label>
+                        <p class="h7"> {{ formImagen.value["profile"] }}</p>
+                        <p class="h7">{{ formPersona.value["backImage"] }}</p>
+                      
+                    </div>
+
+                    <div class="modal-footer form-group">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+                            [disabled]="formImagen.invalid">
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+  <div class="modal fade" id="deleteBannerModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmación</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            ¿Está seguro de eliminar esta persona "{{ borrarPersona?.name }}"?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="onDeletePersona(borrarPersona!.personId)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="deleteImagenModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmación</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            ¿Está seguro de eliminar estas imagenes "?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="onDeletePersona(borrarImagenes!.id)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+

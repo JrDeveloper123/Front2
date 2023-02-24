@@ -1,0 +1,143 @@
+
+
+<!--Añado el btn de añadir habilidad y que abra el modal -->
+<div class="d-grid px-5 gap-2 d-md-flex justify-content-md-end  " *ngIf="hasAccess">
+    <button type="button" class="btn btn-primary btn-sm  " data-bs-toggle="modal" data-bs-target="#addHabilidadModal"
+      (click)="abrirModal('add')">
+      Registrar Habilidad
+    </button>
+  
+  </div>
+  
+  
+
+  
+  
+  <div class="row" id="rowHabilidad">
+      
+  <div id="hab" class="container  mb-5 mt-5" >
+    <div class="conteiner-fluid " > 
+      <h3>Habilidades</h3>
+        <div class="accordion m-3 mb-4" id="accordionPanelsStayOpenExample">
+            <div *ngFor="let habilidad of habilidades" class="accordion-item ">
+              <h2 class="accordion-header" id="panelsStayOpen-headingTen">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTen" aria-expanded="false" aria-controls="panelsStayOpen-collapseTen">
+                  <strong>{{habilidad.technology}}</strong>
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseTen" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTen">
+                <div class="accordion-body">
+                  <p><strong>Proyecto: {{habilidad.technology}}</strong></p>
+                  <p><strong>Descripción: </strong>{{habilidad.percentage}} </p>
+               </div>
+               <div class="col text-end" *ngIf="hasAccess">
+                <a type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#addHabilidadModal"
+                  (click)="abrirModal('edit',habilidad)">
+                  Editar
+                </a>
+                <a type="button" class="btn btn-secondary btn-sm " data-bs-toggle="modal"
+                  data-bs-target="#deleteHabilidadModal" (click)="abrirModal('delete',habilidad)">
+                  Eliminar
+                </a>
+              </div>
+                
+            </div>
+          </div><br/>
+        </div>
+  </div>
+
+
+    <!-- Modal  Habilidad-->
+  
+    <div class="modal fade" id="addHabilidadModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="staticBackdropLabel" aria-hidden="true" role="document">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tituloModalHabilidad"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+  
+          <div class="modal-body">
+  
+            <form [formGroup]="form" class="row g-3" (ngSubmit)="guardarHabilidad($event)" novalidate>
+  
+  
+              <div class="input-group form-group">
+                <input type="hidden" formControlName="id" name="id" id="id" class="form-control">
+                <label for="nombre" class="input-group-text textoLabel">Nombre </label>
+                <input type="text" class="form-control" name="technology" placeholder="Nombre de la habilidad"
+                  formControlName="technology" id="technology"
+                  [ngClass]="{'is-invalid':Nombre?.errors && Nombre?.touched , 'is-valid':!Nombre?.errors && Nombre?.touched }"
+                  required>
+  
+                <div *ngIf="Nombre?.hasError('required')" class="invalid-feedback">El nombre de habilidad es requerido
+                </div>
+  
+              </div>
+  
+              <div class="col-md-4 input-group form-group">
+                <label for="porcentaje" class="input-group-text textoLabel">Porcentaje</label>
+                <input type="number" class="form-control" formControlName="percentage" name="percentage" id="percentage"
+                  placeholder="Porcentaje en número"
+                  [ngClass]="{'is-invalid':Porcentaje?.errors && Porcentaje?.touched , 'is-valid':!Porcentaje?.errors && Porcentaje?.touched }"
+                  required>
+  
+                <div *ngIf="Porcentaje?.hasError('required')" class="invalid-feedback">El porcentaje es requerido</div>
+                <div *ngIf="Porcentaje?.hasError('max')" class="invalid-feedback">El porcentaje no debe ser mayor a 100%
+                </div>
+  
+  
+              </div>
+  
+              
+  
+              
+  
+              <div class="row" style="padding-top:15%">
+  
+                <label>Vista Previa</label>
+  
+                
+                <p class="h5">{{form.value['technology']}}</p>
+                <p class="h7">{{form.value['percentaje']}} %</p>
+  
+              </div>
+  
+              <div class="modal-footer form-group">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+  
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+                  [disabled]="form.invalid">Guardar</button>
+  
+              </div>
+            </form>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  
+  
+  
+    <!-- Modal de borrar-->
+    <div class="modal" id="deleteHabilidadModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Está seguro de eliminar la habilidad "{{borrarHabilidad?.technology}}"?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+              (click)="onDeleteHabilidad(borrarHabilidad!.id)">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>

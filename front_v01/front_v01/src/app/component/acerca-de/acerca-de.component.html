@@ -1,0 +1,293 @@
+
+
+<!--Añado el btn de añadir habilidad y que abra el modal -->
+<div
+  class="d-grid px-5 gap-2 d-md-flex justify-content-md-end"
+  *ngIf="hasAccess"
+>
+  <button
+    type="button"
+    class="btn btn-primary btn-sm"
+    data-bs-toggle="modal"
+    data-bs-target="#addAboutModal"
+    (click)="abrirModal('add')"
+  >
+    Registrar Acerca de...
+  </button>
+</div>
+
+<div class="row" id="rowHabilidad">
+  <div id="acerca" class="container mb-5 mt-5">
+    <div class="conteiner-fluid">
+      <h3><strong>Acerca de...</strong></h3>
+
+      <div class="container">
+        <div class="row">
+          <div class="col align-self-start">
+            <div class="mat-card bg-light">
+              <span>
+                <p class="m-3">{{ personas[0].about }}</p>
+              </span>
+            </div>
+          </div>
+          <div class="col align-self-end">
+            <h3><strong>Contacto</strong></h3>
+            <div class="mat-card bg-light">
+              <h5 class="card-title">Domicilio</h5>
+              <p class="card-text m-3">{{ personas[0].address }}</p>
+              <h5 class="card-title">Telefono</h5>
+              <p class="card-text m-3">{{ personas[0].phone }}</p>
+              <h5 class="card-title">Correo</h5>
+              <p class="card-text m-3">{{ personas[0].mail }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col text-end" *ngIf="hasAccess">
+      <a
+        type="button"
+        class="btn btn-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#addAboutModal"
+        (click)="abrirModal('edit', personas[0])"
+      >
+        Editar
+      </a>
+      <a
+        type="button"
+        class="btn btn-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteAboutModal"
+        (click)="abrirModal('delete', personas[0])"
+      >
+        Borrar</a
+      >
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="addAboutModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+    role="document"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModalAbout"></h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form
+            [formGroup]="form"
+            class="row g-3"
+            (ngSubmit)="guardarPersona($event)"
+            novalidate
+          >
+            <div class="input-group form-group">
+              <input
+                type="hidden"
+                formControlName="personId"
+                name="personId"
+                id="personId"
+                class="form-control"
+              />
+              <label for="name" class="input-group-text textoLabel"
+                >Nombre
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                placeholder="Nombre de la persona"
+                formControlName="name"
+                id="name"
+                [ngClass]="{
+                  'is-invalid': Nombre?.errors && Nombre?.touched,
+                  'is-valid': !Nombre?.errors && Nombre?.touched
+                }"
+                required
+              /> <div
+              *ngIf="Nombre?.hasError('required')"
+              class="invalid-feedback"
+            >
+              El nombre de la persona es requerido
+            </div>
+          </div>
+
+              <div class="input-group form-group">
+              <input
+                type="hidden"
+                formControlName="personId"
+                name="personId"
+                id="personId"
+                class="form-control"
+              />
+              <label for="surname" class="input-group-text textoLabel"
+                >Apellido
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                name="surname"
+                placeholder="Apellido de la persona"
+                formControlName="surname"
+                id="surname"
+                [ngClass]="{
+                  'is-invalid': Apellido?.errors && Nombre?.touched,
+                  'is-valid': !Apellido?.errors && Nombre?.touched
+                }"
+                required
+              />
+
+              <div
+                *ngIf="Apellido?.hasError('required')"
+                class="invalid-feedback"
+              >
+                El nombre de la persona es requerido
+              </div>
+            </div>
+
+             
+
+            <div class="col-md-4 input-group form-group">
+              <label for="acerca-de" class="input-group-text textoLabel"
+                >Acerca de</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="about"
+                name="about"
+                id="about"
+                placeholder="Acerca de"
+              />
+            </div>
+            <div class="col-md-4 input-group form-group">
+              <label for="domicilio" class="input-group-text textoLabel"
+                >Domicilio</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address"
+                name="address"
+                id="adress"
+                placeholder="Domicilio/Localidad"
+              />
+            </div>
+            <div class="col-md-4 input-group form-group">
+              <label for="telefono" class="input-group-text textoLabel"
+                >Telefono</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="phone"
+                name="phone"
+                id="phone"
+                placeholder="Telefono"
+              />
+            </div>
+            <div class="col-md-4 input-group form-group">
+              <label for="correo" class="input-group-text textoLabel"
+                >Corrreo</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="mail"
+                name="mail"
+                id="mail"
+                placeholder="Telefono"
+              />
+            </div>
+
+            <div class="row" style="padding-top: 15%">
+              <label>Vista Previa</label>
+
+              <p class="h5">{{ form.value["name"] }}</p>
+              <p class="h7">{{ form.value["surname"] }}</p>
+              <p>{{ form.value["about"] }}</p>
+              <p>{{ form.value["address"] }}</p>
+              <p>{{ form.value["phone"] }}</p>
+              <p>{{ form.value["mail"] }}</p>
+            </div>
+
+            <div class="modal-footer form-group">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+                data-bs-dismiss="modal"
+                [disabled]="form.invalid"
+              >
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de borrar-->
+  <div class="modal fade" id="deleteAboutModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmación</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            ¿Está seguro de eliminar esta persona "{{ borrarPersona?.name }}"?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="onDeletePersona(borrarPersona!.personId)"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

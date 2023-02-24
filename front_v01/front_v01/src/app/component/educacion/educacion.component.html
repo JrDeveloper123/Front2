@@ -1,0 +1,155 @@
+<div class="d-grid px-5 gap-2 d-md-flex justify-content-md-end  " *ngIf="hasAccess">
+  <button type="button" class="btn btn-primary btn-sm  " data-bs-toggle="modal" data-bs-target="#addEducacionModal"
+    (click)="abrirModal('add')">
+    Registrar Educacion
+  </button>
+
+</div>
+
+
+
+
+
+<div class="row" id="rowHabilidad">
+
+  <div id="estud" class="container  mb-5 mt-5">
+    <div class="conteiner-fluid ">
+      <h3><strong>Educación</strong></h3>
+      <div class="accordion m-3 mb-4" id="accordionPanelsStayOpenExample">
+        <div *ngFor="let educacion of estudiosList" class="accordion-item ">
+          <h2 class="accordion-header" id="panelsStayOpen-headingTen">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#panelsStayOpen-collapseTen" aria-expanded="false"
+              aria-controls="panelsStayOpen-collapseTen">
+              <strong>{{educacion.degree}}</strong>
+            </button>
+          </h2>
+          <div id="panelsStayOpen-collapseTen" class="accordion-collapse collapse"
+            aria-labelledby="panelsStayOpen-headingTen">
+            <div class="accordion-body">
+              <p><strong>Institución: {{educacion.institution}}</strong></p>
+              <p><strong>Titulación: </strong>{{educacion.degree}} </p>
+              <p><strong>Desde:</strong> {{educacion.entry}}<strong> Hasta: </strong> {{educacion.discharge}}</p>
+            </div>
+            <div class="col text-end" *ngIf="hasAccess">
+              <a type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal"
+                data-bs-target="#addEducacionModal" (click)="abrirModal('edit',educacion)">
+                Editar
+              </a>
+              <a type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal"
+                data-bs-target="#deleteEducacionModal" (click)="abrirModal('delete',educacion)">
+                Borrar</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <br />
+    </div>
+  </div>>
+
+
+
+
+  <div class="modal fade" id="addEducacionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true" role="document">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModalEducacion"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <form [formGroup]="form" class="row g-3" (ngSubmit)="guardarEstudios($event)" novalidate>
+
+
+            <div class="input-group form-group">
+              <input type="hidden" formControlName="educationId" name="educationId" id="educationId"
+                class="form-control">
+              <label for="institution" class="input-group-text textoLabel">Nombre </label>
+              <input type="text" class="form-control" name="institution" placeholder="Nombre de la institucion"
+                formControlName="institution" id="institution"
+                [ngClass]="{'is-invalid':Nombre?.errors && Nombre?.touched , 'is-valid':!Nombre?.errors && Nombre?.touched }"
+                required>
+
+              <div *ngIf="Nombre?.hasError('required')" class="invalid-feedback">El nombre de la institucion es
+                requerido
+              </div>
+
+            </div>
+
+            <div class="col-md-4 input-group form-group">
+              <label for="degree" class="input-group-text textoLabel">Titulo</label>
+              <input type="text" class="form-control" formControlName="degree" name="degree" id="degree"
+                placeholder="Titulo"
+                [ngClass]="{'is-invalid':Titulo?.errors && Titulo?.touched , 'is-valid':!Titulo?.errors && Titulo?.touched }"
+                required>
+
+              <div *ngIf="Titulo?.hasError('required')" class="invalid-feedback">El porcentaje es requerido</div>
+
+            </div>
+
+            <div class="col-md-4 input-group form-group">
+              <label for="entrada" class="input-group-text textoLabel">Desde</label>
+              <input type="text" class="form-control" formControlName="entry" name="entry" id="entry"
+                placeholder="Estudia desde" />
+            </div>
+            <div class="col-md-4 input-group form-group">
+              <label for="final" class="input-group-text textoLabel">Hasta</label>
+              <input type="text" class="form-control" formControlName="discharge" name="discharge" id="discharge"
+                placeholder="Estudia hasta" />
+            </div>
+
+
+
+            <div class="row" style="padding-top:15%">
+
+              <label>Vista Previa</label>
+
+
+              <p class="h5">{{form.value['institution']}}</p>
+              <p class="h7">{{form.value['degree']}} </p>
+              <p>{{form.value['entry']}} </p>
+              <p>{{form.value['discharge']}} </p>
+
+            </div>
+
+            <div class="modal-footer form-group">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal"
+                [disabled]="form.invalid">Guardar</button>
+
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="deleteEducacionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro de eliminar estos estudios "{{borrarEstudios?.institution}}"?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            (click)="onDeleteEstudios(borrarEstudios!.educationId)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
